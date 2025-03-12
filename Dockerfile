@@ -2,11 +2,13 @@ FROM node:22.13.0
 
 WORKDIR /usr/src/app
 
+# package.json과 package-lock.json을 먼저 복사하여 의존성 설치
 COPY package*.json ./
 
-RUN npm ci
+# 의존성 설치 및 bcrypt 재빌드 (새로 설치)
+RUN npm ci && npm rebuild bcrypt --build-from-source
 
+# 나머지 파일 복사
 COPY . ./
 
 ENTRYPOINT ["npm", "run", "start"]
-

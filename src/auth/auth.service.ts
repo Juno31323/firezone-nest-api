@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../user/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -20,4 +20,24 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async register(username: string, password: string, fireStation: string, autoLogin: boolean = false) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+      const newUser = await this.usersService.create(username, hashedPassword, fireStation);
+
+      if (autoLogin) {
+        return this.login(username, password);
+      } else {
+        return { message: '회원가입 완료. 로그인 페이지로 이동하세요.' };
+      }
+    } catch (error) {
+      if (error.message === 'DUPLICATE_USERNAME') {
+        throw new UnauthorizedException('이미 사용 중인 사용자 이름');
+      }
+      throw new Error('회원가입 중 오류 발생');
+    }
+  }
+  
 }

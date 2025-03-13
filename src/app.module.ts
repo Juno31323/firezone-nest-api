@@ -27,7 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         password: configService.get('CLOUDSQL_PASS'),
         database: configService.get('CLOUDSQL_DB'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: false, // 배포 : false, 개발 : true
+        synchronize: true, // 배포 : false, 개발 : true
         logging: true, // 디버깅용
         extra: {
           socketPath: configService.get('CLOUDSQL_HOST') || 

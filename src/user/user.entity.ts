@@ -12,4 +12,7 @@ export class User {
   @Column()
   @Exclude() // 응답에서 비밀번호 제외
   password: string;
+
+  @Column()
+  fireStation: string;
 }

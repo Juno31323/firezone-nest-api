@@ -22,4 +22,11 @@ export class UsersService {
     const user = this.usersRepository.create({ username, password, fireStation });
     return this.usersRepository.save(user);
   }
+
+  async updateFireCenter(userId: number, fireStation: string): Promise<User> {
+    const user = await this.usersRepository.findOneOrFail({ where: { id: userId } });
+    user.fireStation = fireStation;
+    return this.usersRepository.save(user);
+  }
+
 }

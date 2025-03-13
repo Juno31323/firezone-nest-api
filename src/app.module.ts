@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './user/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FireCenterModule } from './firecenter/firecenter.module';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         password: configService.get('CLOUDSQL_PASS'),
         database: configService.get('CLOUDSQL_DB'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true, // 배포 : false, 개발 : true
+        synchronize: false, // 배포 : false, 개발 : true
         logging: true, // 디버깅용
         extra: {
           socketPath: configService.get('CLOUDSQL_HOST') || 
@@ -41,6 +42,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     FirezoneModule,
     AuthModule,
     UsersModule,
+    FireCenterModule,
   ],
   controllers: [AppController],
   providers: [AppService],

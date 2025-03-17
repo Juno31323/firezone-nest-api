@@ -1,5 +1,5 @@
 // src/users/users.controller.ts
-import { Controller, Put, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Put, Body, UseGuards, Request, Delete, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -10,11 +10,22 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Put('firecenter')
   async updateFireCenter(@Request() req, @Body() body: { fireStation: string }) {
-    const userId = req.user.id; // JWT 토큰에서 사용자 ID 추출
+    const userId = req.user?.userId; // JWT 토큰에서 사용자 ID 추출
     const updatedUser = await this.usersService.updateFireCenter(userId, body.fireStation);
     return {
       message: '소방서가 성공적으로 변경되었습니다.',
       fireStation: updatedUser.fireStation,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('me')
+  async deleteAccount(@Request() req) {
+    const userId = req.user?.userId;
+    if (!userId) {
+      throw new UnauthorizedException('유효하지 않은 인증 정보입니다.');
+    }
+    await this.usersService.deleteUser(userId);
+    return { message: '회원탈퇴가 완료되었습니다.' };
   }
 }

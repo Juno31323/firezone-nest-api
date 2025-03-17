@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -27,6 +27,17 @@ export class UsersService {
     const user = await this.usersRepository.findOneOrFail({ where: { id: userId } });
     user.fireStation = fireStation;
     return this.usersRepository.save(user);
+  }
+
+  async deleteUser(userId: number): Promise<void> {
+    if (!userId || isNaN(userId)) {
+      throw new BadRequestException('유효한 사용자 ID가 필요합니다.');
+    }
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+    await this.usersRepository.delete(userId);
   }
 
 }

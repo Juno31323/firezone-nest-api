@@ -14,6 +14,7 @@ import { AuthController } from './auth.controller';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
+        
         const secret = configService.get<string>('JWT_SECRET');
         if (!secret) {
           throw new Error('JWT_SECRET 환경 변수가 설정되지 않았습니다.');
@@ -23,6 +24,7 @@ import { AuthController } from './auth.controller';
           signOptions: { expiresIn: '1h' },
         };
       },
+      
       inject: [ConfigService],
     }),
   ],

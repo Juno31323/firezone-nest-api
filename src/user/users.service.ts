@@ -14,6 +14,16 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username });
   }
 
+  // 새 메서드 findById (string 타입 처리)
+  async findById(id: string): Promise<User | null> {
+    const userId = Number(id); // string -> number 변환
+    if (isNaN(userId)) {
+      throw new Error('잘못된 사용자 ID입니다.');
+    }
+    return this.usersRepository.findOneBy({ id: userId });
+  }
+
+
   async create(username: string, password: string, fireStation: string): Promise<User> {
     const existingUser = await this.usersRepository.findOne({ where: { username } });
     if (existingUser) {

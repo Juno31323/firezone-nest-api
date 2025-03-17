@@ -1,5 +1,5 @@
 // src/users/users.controller.ts
-import { Controller, Put, Body, UseGuards, Request, Delete, UnauthorizedException } from '@nestjs/common';
+import { Controller, Put, Body, UseGuards, Request, Delete, UnauthorizedException, Get } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -16,6 +16,14 @@ export class UsersController {
       message: '소방서가 성공적으로 변경되었습니다.',
       fireStation: updatedUser.fireStation,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getProfile(@Request() req) {
+    const userId = req.user?.userId;
+    const user = await this.usersService.findById(userId);
+    return { username: user?.username, fireStation: user?.fireStation }; // fireStation 반환
   }
 
   @UseGuards(JwtAuthGuard)

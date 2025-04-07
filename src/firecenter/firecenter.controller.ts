@@ -1,6 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { FireCenterService } from './firecenter.service';
-import { FireCenterDto } from './dto/firecenter.dto';
 
 @Controller('firecenter')
 export class FireCenterController {

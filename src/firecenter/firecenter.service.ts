@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { firecenter } from './firecenter.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FireCenterDto } from './dto/firecenter.dto';
 
 @Injectable()
 export class FireCenterService {
@@ -20,7 +19,7 @@ export class FireCenterService {
   async getFireCenterDetails(name: string) {
     const fireCenter = await this.FirecenterRepository.findOne({ where: { fc_nm: name } });
     if (!fireCenter) {
-      throw new Error('Fire center not found');
+      throw new NotFoundException('Fire center not found');
     }
     return fireCenter;  // 소방서 상세 정보 반환
   }
